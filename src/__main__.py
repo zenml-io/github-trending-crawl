@@ -1,6 +1,5 @@
 """ starcli.__main__ """
 
-from tkinter import N
 import click
 import re
 import json
@@ -246,6 +245,7 @@ def send_discord_message(message) -> None:
         return
     webhook = Webhook.from_url(discord_url, adapter=RequestsWebhookAdapter())
     webhook.send(message)
+    raise Exception
     
 
 if __name__ == "__main__":
