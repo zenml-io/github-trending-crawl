@@ -212,20 +212,24 @@ def cli(
                     num_stars, str(shorten_count(int(num_stars.replace(",", ""))))
                 )
 
-    print_results(repos, page=pager, layout=layout)
+    # print_results(repos, page=pager, layout=layout)
     publish_repos(repos)
     
     
 def publish_repos(repos):
     publish_keys = ['id', 'name', 'full_name', 'private', 'html_url', 'description', 'created_at', 'updated_at', 'pushed_at', 'homepage', 'size', 'stargazers_count', 'watchers_count', 'language',  'forks_count', 'archived', 'disabled', 'open_issues_count', 'license',  'is_template', 'visibility']
     for repo in repos:
-        publishable_repo = dict((k, repo[k]) for k in publish_keys)
-        print(publishable_repo)
+        publishable_repo = {}
+        for k in publish_keys:
+            if k in repo:
+                publishable_repo[k] = repo[k]
+            else:
+                publishable_repo[k] = None
+        print("Published repo")
         publish_repo(publishable_repo)
-        
+
 def publish_repo(repo):
     analytics.track('GITHUB_ACTIONS_BOT_PROD', 'Repository tracked', repo)
-
 
 if __name__ == "__main__":
     # pylint: disable=no-value-for-parameter
@@ -233,4 +237,8 @@ if __name__ == "__main__":
     if write_key is None:
         raise ValueError('SEGMENT_WRITE_KEY must be set')
     analytics.write_key = write_key 
-    cli()
+    try:
+        cli()
+    except Exception as e:
+        print("EXCEPTION")
+        print(str(e))
