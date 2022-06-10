@@ -231,7 +231,7 @@ def publish_repos(repos):
 
 def publish_repo(repo):
     analytics.track('GITHUB_ACTIONS_BOT_PROD', 'Repository tracked', repo)
-    if 'full_name' in repo:
+    if repo and 'full_name' in repo and repo['full_name']:
         if 'zenml' in repo['full_name']:
             notify_discord(repo['full_name'])
 
