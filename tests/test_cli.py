@@ -10,7 +10,7 @@ import os
 from click.testing import CliRunner
 import pytest
 
-from starcli.__main__ import cli, CACHED_RESULT_PATH
+from src.__main__ import cli, CACHED_RESULT_PATH
 
 
 @pytest.mark.usefixtures("auth")

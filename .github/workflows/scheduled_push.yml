@@ -1,0 +1,27 @@
+name: Post mocked events to Segment
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run this every hour
+    - cron:  '0 * * * *'
+
+jobs:
+  get_trending:
+    runs-on: ubuntu-latest
+    env:
+      SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Scrape GitHub Trending and Push To Segment
+        run: python3 scripts/run_main.py
