@@ -230,11 +230,11 @@ def publish_repos(repos):
         publish_repo(publishable_repo)
 
 def publish_repo(repo):
-    if 'full_name' in repo and 'zenml' in repo['full_name']:
-        notify_discord(repo['full_name'])
     analytics.track('GITHUB_ACTIONS_BOT_PROD', 'Repository tracked', repo)
+    if 'full_name' in repo:
+        if 'zenml' in repo['full_name']:
+            notify_discord(repo['full_name'])
 
-    
 def notify_discord(repo_name):
     # post to discord
     send_discord_message(f'{repo_name} is on GitHub Trending!!!')
