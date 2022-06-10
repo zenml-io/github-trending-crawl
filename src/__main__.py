@@ -1,5 +1,6 @@
 """ starcli.__main__ """
 
+from tkinter import N
 import click
 import re
 import json
@@ -7,6 +8,7 @@ import os
 from datetime import datetime, timedelta
 import analytics
 from xdg import xdg_cache_home
+from discord import RequestsWebhookAdapter, Webhook
 
 from layouts import print_results, shorten_count
 from search import (
@@ -229,7 +231,22 @@ def publish_repos(repos):
         publish_repo(publishable_repo)
 
 def publish_repo(repo):
+    if 'full_name' in repo and 'zenml' in repo['full_name']:
+        notify_discord(repo['full_name'])
     analytics.track('GITHUB_ACTIONS_BOT_PROD', 'Repository tracked', repo)
+
+    
+def notify_discord(repo_name):
+    # post to discord
+    send_discord_message(f'{repo_name} is on GitHub Trending!!!')
+
+def send_discord_message(message) -> None:
+    discord_url = os.getenv('DISCORD_WEBHOOK')
+    if discord_url is None:
+        return
+    webhook = Webhook.from_url(discord_url, adapter=RequestsWebhookAdapter())
+    webhook.send(message)
+    
 
 if __name__ == "__main__":
     # pylint: disable=no-value-for-parameter
