@@ -1,4 +1,4 @@
-name: Post mocked events to Segment
+name: Post scraped data from trending to Segment
 
 on:
   workflow_dispatch:
@@ -24,4 +24,4 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
       - name: Scrape GitHub Trending and Push To Segment
-        run: python3 scripts/run_main.py
+        run: ./scripts/run_main.sh
